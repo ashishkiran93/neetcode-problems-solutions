@@ -1,0 +1,53 @@
+class Solution {
+    public int orangesRotting(int[][] grid) {
+        int[] maxTime = new int[1];
+        Queue<int[]> q = new LinkedList<>();
+        for(int i=0;i<grid.length;i++){
+            for(int j=0;j<grid[0].length;j++){
+                if(grid[i][j]==2){
+                    q.offer(new int[]{i,j,0});
+                }
+            }
+        }
+        bfs(grid,q,maxTime);
+
+        for(int i=0;i<grid.length;i++){
+            for(int j=0;j<grid[0].length;j++){
+                if(grid[i][j]==1){
+                    return -1;
+                }
+            }
+        }
+        return maxTime[0];
+    }
+
+    void bfs(int[][] grid, Queue<int[]> q,int[] maxTime){
+
+        while(!q.isEmpty()){
+            int row = q.peek()[0];
+            int col = q.peek()[1];
+            int time = q.peek()[2];
+            q.poll();
+            maxTime[0] = Math.max(maxTime[0],time);
+
+            int[] dr = {-1,0,1,0};
+            int[] dc = { 0,1,0,-1};
+
+            for(int i=0;i<4;i++){
+                int nr = row + dr[i];
+                int nc = col + dc[i];
+
+                if(
+                    nr>=0 && nr< grid.length
+                    &&
+                    nc>=0 && nc< grid[0].length
+                    &&
+                    grid[nr][nc] == 1
+                ){
+                    grid[nr][nc] = 2;
+                    q.offer(new int[]{nr,nc,time+1});
+                }
+            }
+        }
+    }
+}
